@@ -1,0 +1,195 @@
+{
+  "metadata": {
+    "version": "2025-2026",
+    "source": "TÜİK TÜFE Ana Grupları",
+    "last_updated": "2026-01-23",
+    "total_weight": 100.0
+  },
+  "tuik_weights": {
+    "Gıda ve Alkolsüz İçecekler": {
+      "weight": 24.98,
+      "code": "01",
+      "evds_series": "TP.FG.J01",
+      "description": "Ekmek, tahıllar, et, süt, meyve, sebze vb.",
+      "alt_gruplar": {
+        "Ekmek ve Tahıllar": 5.12,
+        "Et": 3.87,
+        "Balık": 0.68,
+        "Süt, Peynir, Yumurta": 4.23,
+        "Yağ": 1.45,
+        "Meyve": 2.89,
+        "Sebze": 3.41,
+        "Şeker, Reçel, Bal": 0.92,
+        "Gıda Ürünleri (Diğer)": 1.48,
+        "Alkolsüz İçecekler": 0.93
+      }
+    },
+    "Alkollü İçecekler ve Tütün": {
+      "weight": 4.25,
+      "code": "02",
+      "evds_series": "TP.FG.J02",
+      "description": "Alkollü içecekler, sigara, tütün",
+      "alt_gruplar": {
+        "Alkollü İçecekler": 1.35,
+        "Tütün": 2.9
+      }
+    },
+    "Giyim ve Ayakkabı": {
+      "weight": 6.42,
+      "code": "03",
+      "evds_series": "TP.FG.J03",
+      "description": "Giysi, ayakkabı, tekstil ürünleri",
+      "alt_gruplar": {
+        "Giyim": 4.87,
+        "Ayakkabı": 1.55
+      }
+    },
+    "Konut": {
+      "weight": 14.2,
+      "code": "04",
+      "evds_series": "TP.FG.J04",
+      "description": "Kira, elektrik, su, doğalgaz, yakıt",
+      "alt_gruplar": {
+        "Gerçek Kira": 6.85,
+        "Sahibi Tarafından Kullanılan Konut": 0.0,
+        "Konut Bakım ve Onarım": 1.42,
+        "Su Temini": 0.78,
+        "Elektrik, Gaz ve Diğer Yakıtlar": 5.15
+      }
+    },
+    "Ev Eşyası": {
+      "weight": 6.58,
+      "code": "05",
+      "evds_series": "TP.FG.J05",
+      "description": "Mobilya, beyaz eşya, ev tekstili, temizlik malzemeleri",
+      "alt_gruplar": {
+        "Mobilya, Döşeme, Dekorasyon": 2.15,
+        "Ev Tekstili": 0.89,
+        "Ev Aletleri": 1.78,
+        "Ev için Cam, Çanak-Çömlek": 0.45,
+        "Ev için Alet ve Gereç": 0.38,
+        "Ev Bakım Hizmetleri": 0.93
+      }
+    },
+    "Sağlık": {
+      "weight": 2.87,
+      "code": "06",
+      "evds_series": "TP.FG.J06",
+      "description": "İlaç, tıbbi ürünler, sağlık hizmetleri",
+      "alt_gruplar": {
+        "Tıbbi Ürünler, Cihazlar": 1.45,
+        "Ayakta Tedavi Hizmetleri": 0.98,
+        "Hastane Hizmetleri": 0.44
+      }
+    },
+    "Ulaştırma": {
+      "weight": 17.35,
+      "code": "07",
+      "evds_series": "TP.FG.J07",
+      "description": "Taşıt satın alımı, akaryakıt, taşımacılık hizmetleri",
+      "alt_gruplar": {
+        "Taşıt Satın Alımı": 7.23,
+        "Taşıt İşletme": 6.89,
+        "Taşımacılık Hizmetleri": 3.23
+      }
+    },
+    "Haberleşme": {
+      "weight": 3.62,
+      "code": "08",
+      "evds_series": "TP.FG.J08",
+      "description": "Telefon, internet, posta hizmetleri",
+      "alt_gruplar": {
+        "Posta Hizmetleri": 0.12,
+        "Telefon Cihazları": 1.15,
+        "Telefon ve Telefaks Hizmetleri": 2.35
+      }
+    },
+    "Eğlence ve Kültür": {
+      "weight": 2.98,
+      "code": "09",
+      "evds_series": "TP.FG.J09",
+      "description": "Elektronik cihazlar, kitap, gazete, eğlence hizmetleri",
+      "alt_gruplar": {
+        "Görsel-İşitsel Cihazlar": 0.87,
+        "Diğer Dayanıklı Eğlence Malları": 0.35,
+        "Oyunlar, Oyuncaklar, Hobi": 0.42,
+        "Eğlence ve Kültür Hizmetleri": 0.78,
+        "Gazete, Kitap, Kırtasiye": 0.56
+      }
+    },
+    "Eğitim": {
+      "weight": 3.04,
+      "code": "10",
+      "evds_series": "TP.FG.J10",
+      "description": "Okul ücretleri, kurslar, eğitim hizmetleri",
+      "alt_gruplar": {
+        "Okul Öncesi ve İlköğretim": 0.78,
+        "Ortaöğretim": 0.45,
+        "Yükseköğretim": 0.89,
+        "Tanımlanamayan Eğitim": 0.92
+      }
+    },
+    "Lokanta ve Otel": {
+      "weight": 8.78,
+      "code": "11",
+      "evds_series": "TP.FG.J11",
+      "description": "Dışarıda yeme-içme, konaklama hizmetleri",
+      "alt_gruplar": {
+        "Yemek Hizmetleri": 7.65,
+        "Konaklama Hizmetleri": 1.13
+      }
+    },
+    "Çeşitli Mal ve Hizmetler": {
+      "weight": 4.93,
+      "code": "12",
+      "evds_series": "TP.FG.J12",
+      "description": "Kişisel bakım, sigorta, finansal hizmetler, diğer",
+      "alt_gruplar": {
+        "Kişisel Bakım": 2.45,
+        "Kişisel Eşyalar": 0.68,
+        "Sosyal Koruma": 0.35,
+        "Sigorta": 0.87,
+        "Finansal Hizmetler": 0.23,
+        "Diğer Hizmetler": 0.35
+      }
+    }
+  },
+  "ito_weights": {
+    "Gıda": {
+      "weight": 28.5,
+      "description": "Gıda maddeleri ve mutfak harcamaları"
+    },
+    "Konut": {
+      "weight": 16.4,
+      "description": "Kira, elektrik, su, yakıt"
+    },
+    "Giyim": {
+      "weight": 7.1,
+      "description": "Giysi ve ayakkabı"
+    },
+    "Sağlık": {
+      "weight": 2.5,
+      "description": "Sağlık hizmetleri ve ilaç"
+    },
+    "Ulaştırma": {
+      "weight": 12.8,
+      "description": "Toplu taşıma ve akaryakıt"
+    },
+    "Eğitim": {
+      "weight": 4.5,
+      "description": "Eğitim harcamaları"
+    },
+    "Eğlence": {
+      "weight": 3.1,
+      "description": "Kültür ve eğlence"
+    },
+    "Lokanta": {
+      "weight": 6.2,
+      "description": "Dışarıda yeme-içme"
+    },
+    "Diğer": {
+      "weight": 18.9,
+      "description": "Diğer tüm harcamalar"
+    }
+  }
+}
