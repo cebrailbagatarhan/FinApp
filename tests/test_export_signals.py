@@ -54,6 +54,21 @@ class ExportSignalsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             export_signals(self.db, io.StringIO(), limit=0)
 
+    def test_cli_refuses_database_overwrite(self):
+        with self.assertRaises(SystemExit) as error:
+            main(["--db", str(self.db), "--output", str(self.db)])
+        self.assertEqual(error.exception.code, 2)
+        with sqlite3.connect(self.db) as conn:
+            self.assertEqual(conn.execute("SELECT COUNT(*) FROM signals").fetchone()[0], 3)
+
+    def test_cli_refuses_existing_export_overwrite(self):
+        output = Path(self.directory.name) / "existing.csv"
+        output.write_text("keep me", encoding="utf-8")
+        with self.assertRaises(SystemExit) as error:
+            main(["--db", str(self.db), "--output", str(output)])
+        self.assertEqual(error.exception.code, 1)
+        self.assertEqual(output.read_text(encoding="utf-8"), "keep me")
+
     def test_cli_writes_utf8_csv_file(self):
         output = Path(self.directory.name) / "signals.csv"
         self.assertEqual(main(["--db", str(self.db), "--output", str(output), "--limit", "2"]), 0)
