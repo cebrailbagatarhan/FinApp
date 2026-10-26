@@ -67,9 +67,11 @@ def main(argv=None):
     parser.add_argument("--limit", type=int, default=1000, help="En fazla 10000 kayıt")
     parser.add_argument("--output", help="CSV çıktı yolu (varsayılan: stdout)")
     args = parser.parse_args(argv)
+    if args.output and Path(args.output).resolve() == Path(args.db).resolve():
+        parser.error("CSV çıktı yolu veritabanıyla aynı olamaz")
     try:
         if args.output:
-            with open(args.output, "w", newline="", encoding="utf-8-sig") as destination:
+            with open(args.output, "x", newline="", encoding="utf-8-sig") as destination:
                 count = export_signals(args.db, destination, since=args.since, ticker=args.ticker, limit=args.limit)
         else:
             count = export_signals(args.db, sys.stdout, since=args.since, ticker=args.ticker, limit=args.limit)
