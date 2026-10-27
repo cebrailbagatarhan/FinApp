@@ -1,0 +1,23 @@
+name: Inflation CSV coverage
+on:
+  pull_request:
+    paths:
+      - 'scripts/inflation_coverage.py'
+      - 'tests/test_inflation_coverage.py'
+      - 'data/evds_inflation.csv'
+      - '.github/workflows/inflation-coverage.yml'
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p 'test_inflation_coverage.py' -v
+      - name: Syntax check
+        run: python -m py_compile scripts/inflation_coverage.py tests/test_inflation_coverage.py
+      - name: Audit bundled CSV (read-only)
+        run: python scripts/inflation_coverage.py --as-of 2026-10 --json
