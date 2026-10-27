@@ -1,0 +1,23 @@
+name: Market data freshness checks
+
+on:
+  pull_request:
+    paths:
+      - 'analysis/data_freshness.py'
+      - 'tests/test_data_freshness.py'
+      - 'app.py'
+      - '.github/workflows/data-freshness.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p 'test_data_freshness.py' -v
+      - name: Syntax checks
+        run: python -m py_compile analysis/data_freshness.py app.py
