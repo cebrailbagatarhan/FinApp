@@ -18,9 +18,10 @@ env/
 api_keys.txt
 *.pem
 
-# Local data
+# Local data and generated research output
 data/finapp.db
 data/bot_log.txt
+backtest-results/
 
 # IDE / OS
 .idea/
