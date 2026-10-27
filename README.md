@@ -100,6 +100,12 @@ Repoya henüz sabit veri snapshot'ı ve ham equity çıktısıyla doğrulanmış
 - Tek ticker backtest'i portföy performansı, likidite veya piyasa etkisini kanıtlamaz.
 - Sinyal kuralları öğrenilmiş model değildir; geçmişe göre eşik ayarı overfitting yaratabilir.
 
+### Çevrimdışı enflasyon CSV kapsam kontrolü
+
+`python scripts/inflation_coverage.py --as-of 2026-10 --json` komutu, `data/evds_inflation.csv` dosyasındaki ay aralıklarını, eksik/tekrarlı ayları ve geçersiz sayıları **veriyi değiştirmeden** denetler. Başka CSV dosyası ilk argüman olarak verilebilir. `months_since_last` verinin kaç aylık olduğunu bildirir; tek başına hata sayılmaz. Çıkış kodları: 0 = yapısal olarak geçerli, 1 = kapsam/veri hatası, 2 = giriş/dosya hatası. Bu kontrol verinin resmî kaynakla doğruluğunu kanıtlamaz; API anahtarı veya ağ erişimi gerektirmez.
+
+Test: `python -m unittest discover -s tests -p 'test_inflation_coverage.py' -v`.
+
 ## Proje yapısı
 
 ```text
