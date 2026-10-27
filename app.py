@@ -19,6 +19,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from database import init_database, get_connection
+from analysis.data_freshness import get_market_data_freshness
 from analysis.inflation_calc import calculate_basket_inflation, compare_inflation
 from analysis.stock_search import analyze_stock, search_stocks, compare_stocks
 from analysis.calculator import (
@@ -840,7 +841,25 @@ def show_market_inflation():
         market = st.selectbox("Market", ["Tümü", "Migros"])
     
     market_name = None if market == "Tümü" else market
-    
+
+    # Fiyatların güncelliğini enflasyon sonuçlarından bağımsız göster.
+    connection = get_connection()
+    try:
+        freshness = get_market_data_freshness(connection, market_name=market_name)
+    finally:
+        connection.close()
+
+    if freshness['status'] == 'fresh':
+        st.caption(f"Son market fiyat kaydı: {freshness['latest_date']} ({freshness['age_days']} gün önce)")
+    elif freshness['status'] == 'stale':
+        st.warning(f"⚠️ Market fiyatları güncel değil: son kayıt {freshness['latest_date']} ({freshness['age_days']} gün önce).")
+    elif freshness['status'] == 'future':
+        st.warning(f"⚠️ Son market fiyat kaydı gelecekte: {freshness['latest_date']}. Tarihi kontrol edin.")
+    elif freshness['status'] == 'invalid':
+        st.warning("⚠️ Son market fiyat kaydının tarihi geçersiz.")
+    else:
+        st.info("Seçilen market için henüz fiyat kaydı bulunmuyor.")
+
     # Enflasyon hesapla
     inflation = calculate_personal_inflation(days=days, market_name=market_name)
     
