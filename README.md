@@ -114,6 +114,13 @@ TICKERS = {
 
 [analysis/signals.py](analysis/signals.py) dosyasında `generate_combined_signals()` fonksiyonunu düzenleyin.
 
+
+### Çevrimdışı enflasyon CSV kapsam kontrolü
+
+\`python scripts/inflation_coverage.py --as-of 2026-10 --json\` komutu, \`data/evds_inflation.csv\` dosyasındaki ay aralıklarını, eksik/tekrarlı ayları ve geçersiz sayıları **veriyi değiştirmeden** denetler. Başka CSV dosyası ilk argüman olarak verilebilir. \`months_since_last\` verinin kaç aylık olduğunu bildirir; tek başına hata sayılmaz. Çıkış kodları: 0 = yapısal olarak geçerli, 1 = kapsam/veri hatası, 2 = giriş/dosya hatası. Bu kontrol verinin resmî kaynakla doğruluğunu kanıtlamaz; API anahtarı veya ağ erişimi gerektirmez.
+
+Test: \`python -m unittest discover -s tests -p 'test_inflation_coverage.py' -v\`.
+
 ## ⚠️ Önemli Notlar
 
 1. **Yatırım Tavsiyesi Değildir**: Bu uygulama eğitim amaçlıdır.
