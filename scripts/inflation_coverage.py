@@ -23,8 +23,10 @@ def next_month(month):
     return date(month.year + (month.month == 12), month.month % 12 + 1, 1)
 
 
-def audit_csv(path, as_of=None):
+def audit_csv(path, as_of=None, max_age_months=None):
     """Return metadata only; never modify the source CSV or echo cell values."""
+    if max_age_months is not None and (type(max_age_months) is not int or max_age_months < 0):
+        raise ValueError("max_age_months must be a non-negative integer")
     seen = set()
     duplicates = set()
     invalid = []
@@ -69,8 +71,11 @@ def audit_csv(path, as_of=None):
     stale = None
     if ordered:
         stale = max(0, (reference.year - ordered[-1].year) * 12 + reference.month - ordered[-1].month)
+    fresh_enough = None if max_age_months is None else stale is not None and stale <= max_age_months
     return {
-        "ok": bool(ordered) and not duplicates and not missing and not invalid,
+        "ok": bool(ordered) and not duplicates and not missing and not invalid and fresh_enough is not False,
+        "max_age_months": max_age_months,
+        "fresh_enough": fresh_enough,
         "rows": count,
         "first_month": ordered[0].strftime("%Y-%m") if ordered else None,
         "last_month": ordered[-1].strftime("%Y-%m") if ordered else None,
@@ -86,6 +91,7 @@ def main(argv=None):
     parser.add_argument("csv_file", nargs="?", type=Path, default=DEFAULT_CSV)
     parser.add_argument("--as-of", help="Reference month (YYYY-MM), defaults to current month")
     parser.add_argument("--json", action="store_true", help="Print machine-readable report")
+    parser.add_argument("--max-age-months", type=int, help="Fail when latest month is older than this many months")
     args = parser.parse_args(argv)
     try:
         reference = None
@@ -93,7 +99,7 @@ def main(argv=None):
             if len(args.as_of) != 7 or args.as_of[4] != "-":
                 raise ValueError("--as-of must be YYYY-MM")
             reference = parse_month(args.as_of + "-01")
-        report = audit_csv(args.csv_file, as_of=reference)
+        report = audit_csv(args.csv_file, as_of=reference, max_age_months=args.max_age_months)
     except (OSError, UnicodeError, csv.Error, ValueError) as exc:
         print(f"Input error: {exc}", file=sys.stderr)
         return 2
@@ -103,6 +109,8 @@ def main(argv=None):
         print(f"Rows: {report['rows']} | Coverage: {report['first_month']} .. {report['last_month']}")
         print(f"Missing: {len(report['missing_months'])} | Duplicates: {len(report['duplicate_months'])} | Invalid rows: {len(report['invalid_rows'])}")
         print(f"Months since latest data: {report['months_since_last']}")
+        if report["max_age_months"] is not None:
+            print(f"Freshness (max {report['max_age_months']} months): {'PASS' if report['fresh_enough'] else 'FAIL'}")
         print("PASS" if report["ok"] else "FAIL (review CSV coverage/quality)")
     return 0 if report["ok"] else 1
 
