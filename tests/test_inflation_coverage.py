@@ -74,5 +74,33 @@ class InflationCoverageTests(unittest.TestCase):
                 parse_month(value)
 
 
+    def test_optional_max_age_threshold_inclusive_and_default(self):
+        self.write([["2025-01-01", "10", "11"], ["2025-02-01", "11", "12"], ["2025-03-01", "12", "13"]])
+        self.assertIsNone(self.audit()["fresh_enough"])
+        on_limit = audit_csv(self.path, as_of=date(2025, 5, 1), max_age_months=2)
+        self.assertTrue(on_limit["ok"])
+        self.assertTrue(on_limit["fresh_enough"])
+        self.assertEqual(on_limit["max_age_months"], 2)
+        too_old = audit_csv(self.path, as_of=date(2025, 5, 1), max_age_months=1)
+        self.assertFalse(too_old["ok"])
+        self.assertFalse(too_old["fresh_enough"])
+
+    def test_max_age_validation_and_empty_data(self):
+        self.write([])
+        self.assertFalse(audit_csv(self.path, as_of=date(2025, 5, 1), max_age_months=0)["fresh_enough"])
+        for threshold in (-1, 1.5, True):
+            with self.assertRaises(ValueError):
+                audit_csv(self.path, max_age_months=threshold)
+
+    def test_cli_max_age_json_exit_codes(self):
+        self.write([["2025-01-01", "10", "11"]])
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(main([str(self.path), "--as-of", "2025-03", "--max-age-months", "2", "--json"]), 0)
+        self.assertTrue(json.loads(output.getvalue())["fresh_enough"])
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(main([str(self.path), "--as-of", "2025-03", "--max-age-months", "1"]), 1)
+        self.assertEqual(main([str(self.path), "--max-age-months", "-1"]), 2)
+
 if __name__ == "__main__":
     unittest.main()
