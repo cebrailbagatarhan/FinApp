@@ -77,5 +77,31 @@ class ExportSignalsTests(unittest.TestCase):
         self.assertEqual(len(rows), 2)
 
 
+    def test_until_is_inclusive_and_can_combine_with_since_and_ticker(self):
+        output = io.StringIO()
+        count = export_signals(self.db, output, since="2026-01-01", until="2026-01-15", ticker="thyao")
+        self.assertEqual(count, 1)
+        self.assertEqual([r['date'] for r in csv.DictReader(io.StringIO(output.getvalue()))], ['2026-01-15'])
+
+    def test_until_without_since_excludes_newer_records(self):
+        output = io.StringIO()
+        self.assertEqual(export_signals(self.db, output, until="2025-12-31"), 1)
+        self.assertEqual([r['date'] for r in csv.DictReader(io.StringIO(output.getvalue()))], ['2025-12-31'])
+
+    def test_invalid_until_and_reversed_range_rejected(self):
+        for until in ('2026-02-30', '2026-1-15'):
+            with self.subTest(until=until), self.assertRaises(ValueError):
+                export_signals(self.db, io.StringIO(), until=until)
+        with self.assertRaises(ValueError):
+            export_signals(self.db, io.StringIO(), since='2026-01-20', until='2026-01-15')
+
+    def test_cli_until_flag(self):
+        output = Path(self.directory.name) / 'filtered.csv'
+        self.assertEqual(main(['--db', str(self.db), '--until', '2026-01-15', '--output', str(output)]), 0)
+        with output.open(encoding='utf-8-sig', newline='') as stream:
+            self.assertEqual(len(list(csv.DictReader(stream))), 2)
+
+
+
 if __name__ == "__main__":
     unittest.main()
