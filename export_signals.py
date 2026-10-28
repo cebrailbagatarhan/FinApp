@@ -1,6 +1,6 @@
 """Export previously saved trading signals without fetching data or modifying the DB.
 
-Usage: python export_signals.py --since 2026-01-01 --ticker THYAO --output signals.csv
+Usage: python export_signals.py --since 2026-01-01 --until 2026-01-31 --ticker THYAO --output signals.csv
 """
 import argparse
 import csv
@@ -24,7 +24,7 @@ def safe_cell(value):
     return text
 
 
-def export_signals(db_path, destination, *, since=None, ticker=None, limit=1000):
+def export_signals(db_path, destination, *, since=None, until=None, ticker=None, limit=1000):
     """Write saved signals as CSV; open SQLite in read-only mode."""
     db_path = Path(db_path)
     if not db_path.is_file():
@@ -34,11 +34,19 @@ def export_signals(db_path, destination, *, since=None, ticker=None, limit=1000)
     if since is not None:
         if len(since) != 10 or date.fromisoformat(since).isoformat() != since:
             raise ValueError("since YYYY-MM-DD biçiminde olmalı")
+    if until is not None:
+        if len(until) != 10 or date.fromisoformat(until).isoformat() != until:
+            raise ValueError("until YYYY-MM-DD biçiminde olmalı")
+    if since and until and since > until:
+        raise ValueError("since tarihi until tarihinden sonra olamaz")
 
     where, params = [], []
     if since:
         where.append("date >= ?")
         params.append(since)
+    if until:
+        where.append("date <= ?")
+        params.append(until)
     if ticker:
         where.append("UPPER(ticker) = ?")
         params.append(ticker.upper())
@@ -63,6 +71,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Kayıtlı al/sat sinyallerini CSV olarak dışa aktar")
     parser.add_argument("--db", default=DB_PATH, help="Mevcut SQLite veritabanı yolu")
     parser.add_argument("--since", help="En erken sinyal tarihi (YYYY-MM-DD)")
+    parser.add_argument("--until", help="En geç sinyal tarihi, dahil (YYYY-MM-DD)")
     parser.add_argument("--ticker", help="Hisse kodu filtresi")
     parser.add_argument("--limit", type=int, default=1000, help="En fazla 10000 kayıt")
     parser.add_argument("--output", help="CSV çıktı yolu (varsayılan: stdout)")
@@ -72,9 +81,9 @@ def main(argv=None):
     try:
         if args.output:
             with open(args.output, "x", newline="", encoding="utf-8-sig") as destination:
-                count = export_signals(args.db, destination, since=args.since, ticker=args.ticker, limit=args.limit)
+                count = export_signals(args.db, destination, since=args.since, until=args.until, ticker=args.ticker, limit=args.limit)
         else:
-            count = export_signals(args.db, sys.stdout, since=args.since, ticker=args.ticker, limit=args.limit)
+            count = export_signals(args.db, sys.stdout, since=args.since, until=args.until, ticker=args.ticker, limit=args.limit)
     except (OSError, sqlite3.Error, ValueError) as error:
         parser.exit(1, f"Dışa aktarma başarısız: {error}\n")
     print(f"{count} sinyal dışa aktarıldı.", file=sys.stderr)
