@@ -104,6 +104,8 @@ Repoya henüz sabit veri snapshot'ı ve ham equity çıktısıyla doğrulanmış
 
 `python scripts/inflation_coverage.py --as-of 2026-10 --json` komutu, `data/evds_inflation.csv` dosyasındaki ay aralıklarını, eksik/tekrarlı ayları ve geçersiz sayıları **veriyi değiştirmeden** denetler. Başka CSV dosyası ilk argüman olarak verilebilir. `months_since_last` verinin kaç aylık olduğunu bildirir; tek başına hata sayılmaz. Çıkış kodları: 0 = yapısal olarak geçerli, 1 = kapsam/veri hatası, 2 = giriş/dosya hatası. Bu kontrol verinin resmî kaynakla doğruluğunu kanıtlamaz; API anahtarı veya ağ erişimi gerektirmez.
 
+İsteğe bağlı `--max-age-months 2`, en son veri ayı referans aydan 2 aydan daha eskiyse çıkış kodunu 1 yapar; tam eşik değeri geçerlidir. `--as-of YYYY-MM` ile sabit bir referans ayı seçilebilir. JSON raporunda `max_age_months` ve `fresh_enough` alanları bulunur (`fresh_enough` eşik verilmezse `null`). Bu kontrol verinin doğruluğunu değil yalnızca güncelliğini ölçer.
+
 Test: `python -m unittest discover -s tests -p 'test_inflation_coverage.py' -v`.
 
 ## Proje yapısı
